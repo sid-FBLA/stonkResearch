@@ -1,0 +1,3 @@
+APIKEY = "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"
+"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"
+"clfrrmhr01qnc0nekfd0clfrrmhr01qnc0nekfdg"
