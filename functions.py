@@ -21,14 +21,7 @@ def remove_hypens(text):
 
     return result
 
-def html_to_text(html):
-    from bs4 import BeautifulSoup
-    # Parse the HTML content using BeautifulSoup
-    soup = BeautifulSoup(html, "html.parser")
-
-    # Find all text within the HTML document
-    return soup.get_text()
-
+#returns a string until a certain character
 def get_string_until(string, target_char):
     #index of target character
     index = string.find(target_char)
@@ -38,3 +31,43 @@ def get_string_until(string, target_char):
     else:
         result = string  # Or handle the case where the character is not found
     return result
+
+#Getting html from javascript loaded elements
+def get_html_from_javascript(url, cssSelector):
+    #Getting selenium then downloading web driver add to requirements.txt
+    from selenium import webdriver
+    from selenium.webdriver.chrome.service import Service as ChromeService
+    from webdriver_manager.chrome import ChromeDriverManager
+    #We need these modules to wait for javascript content 
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+    from selenium.common.exceptions import TimeoutException  # Import TimeoutException
+
+    #installing the latest webdriver
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+    driver.get(url)
+
+    try:
+        wait = WebDriverWait(driver, 30)  # Wait for up to 10 seconds
+        # Wait for the JavaScript to load the content--> this xbrl form is our "ticket"
+        driver.implicitly_wait(10)  # Wait up to 10 seconds for elements to appear
+        content = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, cssSelector)))
+        print(content)
+        # Retrieve all HTML content within css Selector
+        return content.get_attribute("innerHTML")
+
+    except TimeoutException:
+        return "Element not found within the time frame"
+
+    # Don't forget to close the driver
+    driver.quit()
+
+#After retrieving html content this will extract all the text
+def html_to_text(html):
+    from bs4 import BeautifulSoup
+    # Parse the HTML content using BeautifulSoup
+    soup = BeautifulSoup(html, "html.parser")
+
+    # Find all text within the HTML document
+    return soup.get_text()
