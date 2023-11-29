@@ -1,3 +1,3 @@
-APIKEY = "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"
-"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"
+APIKEY = "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"
+"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"
 "clfrrmhr01qnc0nekfd0clfrrmhr01qnc0nekfdg"
