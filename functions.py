@@ -68,6 +68,7 @@ def html_to_text(html):
     from bs4 import BeautifulSoup
     # Parse the HTML content using BeautifulSoup
     soup = BeautifulSoup(html, "html.parser")
+    formatted_text = soup.get_text(separator='\n')
 
     # Find all text within the HTML document
-    return soup.get_text()
+    return formatted_text

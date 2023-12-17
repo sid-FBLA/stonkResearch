@@ -47,6 +47,13 @@ print("Submit Ticker:")
 query = functions.user_input()
 print(query)
 
+
+#Creating an instance of company class
+Company1 = Company(query.strip())
+Company1.get10k()
+#print(Company1.cik)
+#print(Company1.get10k())
+
 #Okay so look into creating a vector embedding by breaking paragraphs then saving them to an OpenAI database 
 
 # Read the contents of the file
@@ -55,15 +62,50 @@ with open('test.txt', 'r', encoding='utf-8') as file:
 from openai import OpenAI
 
 client = OpenAI()
+"""
+#Converting txt file to vector embeddings
+import re
+from gensim.utils import simple_preprocess
 
-from openai.embeddings_utils import get_embedding, cosine_similarity
+def read_text_in_chunks(file_path, chunk_size=10000):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        chunk = []
+        for line in file:
+            # Simple preprocessing for each line
+            processed_line = simple_preprocess(line)
+            chunk.extend(processed_line)
+            if len(chunk) >= chunk_size:
+                yield chunk
+                chunk = []
+        if chunk:
+            yield chunk
+
+file_path = "AAPL 10-K"
+
+from gensim.models import Word2Vec
+
+# Initialize the model
+model = Word2Vec(vector_size=100, window=5, min_count=5, workers=4)
+
+# Build vocabulary and train the model
+for chunk in read_text_in_chunks(file_path):
+    model.build_vocab([chunk], update=True)
+    model.train([chunk], total_examples=model.corpus_count, epochs=model.epochs)
+
+# Save the entire model
+model.save("word2vec_large.model")
+
+# Save only the word vectors
+word_vectors = model.wv
+word_vectors.save("wordvectors_large.kv")
+
 
 
 test_df = pd.read_csv['test.txt']
 print(test_df)
 
 
-""" Facebook for cosine similarity 
+Facebook for cosine similarity 
 response = client.embeddings.create(
   model="text-embedding-ada-002",
   input= "Hello my name is Sid",
@@ -97,9 +139,3 @@ print(index)
 #Q&A
 print(index.query(query))
 """
-
-#Creating an instance of company class
-Company1 = Company(query.strip())
-
-#print(Company1.cik)
-#print(Company1.get10k())
