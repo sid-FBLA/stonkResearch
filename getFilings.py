@@ -66,7 +66,7 @@ def get10k(self):
     company10ktext = functions.html_to_text(contentHTML)
 
     #All the text gets written in a file called companyInfo.txt
-    fileName = self.ticker + " 10-K"
+    fileName = self.ticker + " 10-K" + ".txt"
     # Open the file. If it doesn't exist, it will be created.
     with open(fileName, 'w', encoding="utf-8") as file:
         # Write some content to the file
